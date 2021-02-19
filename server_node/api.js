@@ -36,37 +36,39 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+exports.api = void 0;
+var express = require("express");
 var language = require("@google-cloud/language");
-var express = require('express');
-var cors = require('cors');
+exports.api = express.Router();
 var client = new language.LanguageServiceClient();
-var app = express();
-app.use(cors());
-app.get('/api/v1/sentiment', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var text, document, result, err_1;
+exports.api.get('/sentiment', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var text, document_1, result, err_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
+                if (!(typeof req.query.text === 'string')) return [3 /*break*/, 5];
                 text = req.query.text;
-                document = {
+                document_1 = {
                     content: text,
                     type: 'PLAIN_TEXT'
                 };
                 _a.label = 1;
             case 1:
                 _a.trys.push([1, 3, , 4]);
-                return [4 /*yield*/, client.analyzeSentiment({ document: document })];
+                return [4 /*yield*/, client.analyzeSentiment({ document: document_1 })];
             case 2:
                 result = (_a.sent())[0];
                 res.json({ result: result.sentences });
                 return [3 /*break*/, 4];
             case 3:
                 err_1 = _a.sent();
-                res.status(500);
-                res.json({ err: err_1 });
+                res.sendStatus(500);
                 return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+            case 4: return [3 /*break*/, 6];
+            case 5:
+                res.sendStatus(400);
+                _a.label = 6;
+            case 6: return [2 /*return*/];
         }
     });
 }); });
-app.listen(8080, function () { return console.log(':8080'); });
